@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @RequestMapping("/read")
 public class ReadController {
-
     private static final String botToken = "7654091447:AAE2k13psDkl6Y34869ua0kiU9EAtBeInSY";
 
     private static final String chatId = "529624024";
