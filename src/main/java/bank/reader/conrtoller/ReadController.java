@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 @RequestMapping("/read")
@@ -21,6 +22,19 @@ public class ReadController {
     @PostMapping
     public void getData(@RequestBody Read readData) {
         sendMessageToTelegram(readData);
+    }
+
+    @PostMapping("/test")
+    public void testGetData() {
+        Read read = new Read();
+        read.setId("123456");
+        read.setApp("TestApp");
+        read.setSender("test test ");
+        read.setText("This is a test test message");
+        read.setOperator_token(" test abc123token");
+        read.setRequisite("Test requisite data");
+        read.setDevice_id("test device_987654");
+        sendMessageToTelegram(read);
     }
 
     public void sendMessageToTelegram(Read readData) {
