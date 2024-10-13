@@ -65,7 +65,7 @@ public class ReadController {
 
         // Извлекаем отправителя
         String fromLine = lines[3];
-        String fromStr = fromLine.split("vid")[1].trim();
+        String fromStr = fromLine.split("UAH")[1].trim();
         read.setFrom(fromStr);
 
         // Извлекаем время и преобразуем в UNIX
