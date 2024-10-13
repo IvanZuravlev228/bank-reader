@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/read")
 public class ReadController {
@@ -37,6 +41,16 @@ public class ReadController {
         sendMessageToTelegram(read);
     }
 
+    @PostMapping("/txt")
+    public void handleRequest(@RequestBody String body) {
+        System.out.println("Body: \n");
+        System.out.println(body);
+        // Заменяем неэкранированные символы новой строки
+//        String sanitizedBody = body.replaceAll("(?<!\\\\)(\\r|\\n)", "\\\\n");
+
+        sendMessageToTelegram(body);
+    }
+
     public void sendMessageToTelegram(Read readData) {
         String url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
 
@@ -53,5 +67,23 @@ public class ReadController {
         String telegramUrl = url + "?chat_id=" + chatId + "&text=" + message;
 
         restTemplate.exchange(telegramUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+    }
+
+    public void sendMessageToTelegram(String message) {
+        try {
+            // URL-encode the message to handle special characters
+            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+            System.out.println("encodedMessage\n");
+            System.out.println(encodedMessage);
+
+            String url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
+            String telegramUrl = url + "?chat_id=" + chatId + "&text=" + encodedMessage;
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.exchange(telegramUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+            // Handle the encoding exception
+        }
     }
 }
